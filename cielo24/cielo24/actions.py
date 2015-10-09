@@ -28,7 +28,6 @@ class Actions(object):
     GET_CAPTION_PATH = '/api/job/get_caption'
     GET_ELEMENT_LIST_PATH = '/api/job/get_elementlist'
     GET_LIST_OF_ELEMENT_LISTS_PATH = '/api/job/list_elementlists'
-    AGGREGATE_STATISTICS_PATH = '/api/job/aggregate_statistics'
 
     def __init__(self, base_url='https://api.cielo24.com'):
         self._base_url = base_url
@@ -219,21 +218,6 @@ class Actions(object):
     def get_list_of_element_lists(self, api_token, job_id):
         query_dict = self.__init_job_req_dict(api_token, job_id)
         response = WebUtils.get_json(self.base_url, self.GET_LIST_OF_ELEMENT_LISTS_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
-        return response
-
-    def aggregate_statistics(self, api_token, metrics=None, group_by=None, start_date=None, end_date=None, account_id=None):
-        query_dict = self.__init_access_req_dict(api_token)
-        if metrics:
-            query_dict['metrics'] = json.dumps(metrics)
-        if group_by:
-            query_dict['group_by'] = group_by
-        if start_date:
-            query_dict['start_date'] = start_date.isoformat()
-        if end_date:
-            query_dict['end_date'] = end_date.isoformat()
-        if account_id:
-            query_dict['account_id'] = account_id
-        response = WebUtils.get_json(self.base_url, self.AGGREGATE_STATISTICS_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response
 
     ##############################

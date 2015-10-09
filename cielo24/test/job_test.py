@@ -15,13 +15,6 @@ class JobTest(ActionsTest):
         # Always start with a fresh job
         self.job_id = self.actions.create_job(self.api_token, 'Python_test')['JobId']
 
-    def tearDown(self):
-        try:
-            self.actions.delete_job(self.api_token, self.job_id)
-        except:
-            # Pass silently
-            pass
-
     def test_options_get_dict(self):
         options = JobListOptions()
         options.CreationDateFrom = datetime(2015, 6, 25, 15, 45, 34, 123456)
@@ -161,14 +154,3 @@ class JobTest(ActionsTest):
         file = open(config.sample_video_file_path, 'rb')
         self.task_id = self.actions.add_media_to_job_file(self.api_token, self.job_id, file)
         self.assertEqual(32, len(self.task_id))
-
-    def test_aggregate_statistics(self):
-        response = self.actions.aggregate_statistics(self.api_token,
-                                                     metrics=['billable_minutes_total', 'billable_minutes_professional'],
-                                                     group_by='month',
-                                                     start_date='2015-06-25T00:00:00.000000',
-                                                     end_date='2015-07-25T00:00:00.000000',
-                                                     account_id='*')
-        self.assertEqual(response.data.length, 2)
-        self.assertIn('billable_minutes_total', response.data[0])
-        self.assertIn('billable_minutes_professional', response.data[0])

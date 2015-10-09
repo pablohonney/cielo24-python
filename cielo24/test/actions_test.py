@@ -27,14 +27,3 @@ class ActionsTest(TestCase):
         # Start with a fresh session each time
         self.api_token = self.actions.login(config.username, config.password, None, True)
         self.secure_key = self.actions.generate_api_key(self.api_token, config.username, False)
-
-    def tearDown(self):
-        try:
-            self.actions.remove_api_key(self.api_token)
-        except WebError as e:
-            if e.error_type == ErrorType.ACCOUNT_UNPRIVILEGED:
-                self.api_token = self.actions.login(config.username, config.password, None, True)
-                self.actions.remove_api_key(self.api_token)
-            else:
-                # Pass silently
-                pass

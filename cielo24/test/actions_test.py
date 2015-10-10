@@ -16,9 +16,9 @@ class ActionsTest(TestCase):
 
     def __init__(self, *args, **kwargs):
         super(ActionsTest, self).__init__(*args, **kwargs)
+        self.actions = Actions(config.server_url)
         self.api_token = None
         self.secure_key = None
-        self.actions = None
 
     @classmethod
     def setUpClass(cls):
@@ -35,7 +35,6 @@ class ActionsTest(TestCase):
         WebUtils.LOGGER.removeHandler(cls.console_handler)
 
     def setUp(self):
-        self.actions = Actions(config.server_url)
         # Start with a fresh session each time
         self.api_token = self.actions.login(config.username, config.password, None, True)
         self.secure_key = self.actions.generate_api_key(self.api_token, config.username, False)

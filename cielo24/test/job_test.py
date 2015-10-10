@@ -20,6 +20,7 @@ class JobTest(ActionsTest):
         self.job_id = self.actions.create_job(self.api_token, 'Python_test')['JobId']
 
     def tearDown(self):
+        # Delete job
         try:
             self.actions.delete_job(self.api_token, self.job_id)
         except:

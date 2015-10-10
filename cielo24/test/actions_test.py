@@ -40,6 +40,7 @@ class ActionsTest(TestCase):
         self.secure_key = self.actions.generate_api_key(self.api_token, config.username, False)
 
     def tearDown(self):
+        # Remove secure key
         if self.api_token and self.secure_key:
             try:
                 self.actions.remove_api_key(self.api_token, self.secure_key)

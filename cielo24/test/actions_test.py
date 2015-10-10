@@ -5,12 +5,20 @@ import logging
 from unittest import TestCase
 
 from cielo24.actions import Actions
+from cielo24.enums import ErrorType
+from cielo24.web_utils import WebError
 from cielo24.web_utils import WebUtils
 
 import config as config
 
 
 class ActionsTest(TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super(ActionsTest, self).__init__(*args, **kwargs)
+        self.api_token = None
+        self.secure_key = None
+        self.actions = None
 
     @classmethod
     def setUpClass(cls):
@@ -33,12 +41,12 @@ class ActionsTest(TestCase):
         self.secure_key = self.actions.generate_api_key(self.api_token, config.username, False)
 
     def tearDown(self):
-        try:
-            self.actions.remove_api_key(self.api_token)
-        except WebError as e:
-            if e.error_type == ErrorType.ACCOUNT_UNPRIVILEGED:
-                self.api_token = self.actions.login(config.username, config.password, None, True)
-                self.actions.remove_api_key(self.api_token)
-            else:
-                # Pass silently
-                pass
+        if self.api_token and self.secure_key:
+            try:
+                self.actions.remove_api_key(self.api_token, self.secure_key)
+            except WebError as e:
+                if e.error_type == ErrorType.ACCOUNT_UNPRIVILEGED:
+                    self.api_token = self.actions.login(config.username, config.password, None, True)
+                    self.actions.remove_api_key(self.api_token, self.secure_key)
+                else:
+                    pass  # Pass silently

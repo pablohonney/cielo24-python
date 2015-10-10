@@ -1,4 +1,6 @@
 # encoding: utf-8
+from __future__ import unicode_literals
+
 from httplib import HTTPConnection
 from urllib import urlencode
 from urlparse import urlparse

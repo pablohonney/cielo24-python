@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import unicode_literals
 
 server_url = 'http://sandbox.cielo24.com'
 username = 'api_test'

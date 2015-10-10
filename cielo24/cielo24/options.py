@@ -1,7 +1,9 @@
 # encoding: utf-8
-from re import compile
-from datetime import datetime
+from __future__ import unicode_literals
+
 import json
+from datetime import datetime
+from re import compile
 
 
 class BaseOptions(object):

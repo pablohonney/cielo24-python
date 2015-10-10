@@ -1,9 +1,12 @@
 # encoding: utf-8
-from actions_test import ActionsTest
+from __future__ import unicode_literals
+
 from cielo24.actions import Actions
-from cielo24.web_utils import WebError
 from cielo24.enums import ErrorType
+from cielo24.web_utils import WebError
+
 import config as config
+from actions_test import ActionsTest
 
 
 class SequentialTest(ActionsTest):

@@ -1,8 +1,11 @@
 # encoding: utf-8
+from __future__ import unicode_literals
+
 import json
 from json import JSONDecoder
 from os import fstat
 from urllib import urlencode
+
 from enums import Language
 from web_utils import WebUtils
 

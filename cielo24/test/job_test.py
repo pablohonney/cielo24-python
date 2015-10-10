@@ -1,11 +1,15 @@
 # encoding: utf-8
-from uuid import uuid4
+from __future__ import unicode_literals
+
 from datetime import datetime
-from actions_test import ActionsTest
 from urlparse import urlparse
+from uuid import uuid4
+
 from cielo24.options import BaseOptions, CaptionOptions, JobListOptions, TranscriptOptions, PerformTranscriptionOptions
 from cielo24.enums import CaptionFormat, Language, Fidelity, Priority, SoundTag
+
 import config as config
+from actions_test import ActionsTest
 
 
 class JobTest(ActionsTest):

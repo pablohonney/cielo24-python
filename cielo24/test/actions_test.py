@@ -1,8 +1,12 @@
 # encoding: utf-8
+from __future__ import unicode_literals
+
 import logging
 from unittest import TestCase
+
 from cielo24.actions import Actions
 from cielo24.web_utils import WebUtils
+
 import config as config
 
 

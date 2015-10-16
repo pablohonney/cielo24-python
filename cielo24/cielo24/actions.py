@@ -338,11 +338,11 @@ class Actions(object):
     def aggregate_statistics(self, api_token, metrics=None, group_by=None, start_date=None, end_date=None, sub_account=None):
         """
         :type api_token: basestring
-        :type metrics: list
-        :type group_by: basestring
-        :type start_date: date
-        :type end_date: date
-        :type sub_account: basestring
+        :type metrics: list|None
+        :type group_by: basestring|None
+        :type start_date: date|None
+        :type end_date: date|None
+        :type sub_account: basestring|None
         :rtype: dict
         """
         query_dict = self.__init_access_req_dict(api_token)

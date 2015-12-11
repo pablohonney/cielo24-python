@@ -172,7 +172,7 @@ class JobTest(ActionsTest):
                                                      group_by='month',
                                                      start_date=datetime(2015, 6, 25),
                                                      end_date=datetime(2015, 7, 25),
-                                                     account_id='*')
+                                                     sub_account='*')
         self.assertEqual(len(response['data']), 2)
         self.assertIn('billable_minutes_total', response['data'][0])
         self.assertIn('billable_minutes_professional', response['data'][0])

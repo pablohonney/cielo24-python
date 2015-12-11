@@ -1,8 +1,11 @@
 # encoding: utf-8
+from __future__ import unicode_literals
+
 import json
 from json import JSONDecoder
 from os import fstat
 from urllib import urlencode
+
 from enums import Language
 from web_utils import WebUtils
 
@@ -28,6 +31,7 @@ class Actions(object):
     GET_CAPTION_PATH = '/api/job/get_caption'
     GET_ELEMENT_LIST_PATH = '/api/job/get_elementlist'
     GET_LIST_OF_ELEMENT_LISTS_PATH = '/api/job/list_elementlists'
+    AGGREGATE_STATISTICS_PATH = '/api/job/aggregate_statistics'
 
     def __init__(self, base_url='https://api.cielo24.com'):
         self._base_url = base_url
@@ -45,6 +49,13 @@ class Actions(object):
     ######################
 
     def login(self, username, password=None, api_securekey=None, use_headers=False):
+        """
+        :type username: basestring
+        :type password: basestring|None
+        :type api_securekey: basestring|None
+        :type use_headers: bool
+        :rtype: basestring
+        """
         self.__assert_argument(username, 'Username')
         # Password or API Secure Key must be supplied but not both
         if password is None and api_securekey is None:
@@ -70,11 +81,19 @@ class Actions(object):
         return response['ApiToken']
 
     def logout(self, api_token):
+        """
+        :type api_token: basestring
+        """
         query_dict = self.__init_access_req_dict(api_token)
         # Nothing returned
         WebUtils.http_request(self.base_url, self.LOGOUT_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
 
     def update_password(self, api_token, new_password, sub_account=None):
+        """
+        :type api_token: basestring
+        :type new_password: basestring
+        :type sub_account: basestring|None
+        """
         self.__assert_argument(new_password, 'New Password')
         query_dict = self.__init_access_req_dict(api_token)
         query_dict['new_password'] = new_password
@@ -84,15 +103,26 @@ class Actions(object):
         # Nothing returned
         WebUtils.http_request(self.base_url, self.UPDATE_PASSWORD_PATH, 'POST', WebUtils.BASIC_TIMEOUT, None, None, urlencode(query_dict))
 
-    def generate_api_key(self, api_token, username, force_new=False):
-        self.__assert_argument(username, 'Username')
+    def generate_api_key(self, api_token, sub_account=None, force_new=False):
+        """
+        :type api_token: basestring
+        :type sub_account: basestring|None
+        :type force_new: bool
+        :rtype: basestring
+        """
         query_dict = self.__init_access_req_dict(api_token)
-        query_dict['account_id'] = username
+        if sub_account:
+            # account_id parameter named sub_account for clarity
+            query_dict['account_id'] = sub_account
         query_dict['force_new'] = force_new
         response = WebUtils.get_json(self.base_url, self.GENERATE_API_KEY_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response['ApiKey']
 
     def remove_api_key(self, api_token, api_securekey):
+        """
+        :type api_token: basestring
+        :type api_securekey: basestring
+        """
         self.__assert_argument(api_securekey, 'API Secure Key')
         query_dict = self.__init_access_req_dict(api_token)
         query_dict['api_securekey'] = api_securekey
@@ -104,6 +134,14 @@ class Actions(object):
     ###################
 
     def create_job(self, api_token, job_name=None, language=Language.ENGLISH, external_id=None, sub_account=None):
+        """
+        :type api_token: basestring
+        :type job_name: basestring
+        :type language: basestring|Language
+        :type external_id: basestring
+        :type sub_account: basestring
+        :rtype: dict
+        """
         query_dict = self.__init_access_req_dict(api_token)
 
         if job_name:
@@ -121,21 +159,40 @@ class Actions(object):
         return response
 
     def authorize_job(self, api_token, job_id):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         # Nothing returned
         WebUtils.http_request(self.base_url, self.AUTHORIZE_JOB_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
 
     def delete_job(self, api_token, job_id):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :rtype: basestring
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         response = WebUtils.get_json(self.base_url, self.DELETE_JOB_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response['TaskId']
 
     def get_job_info(self, api_token, job_id):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :rtype: dict
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         response = WebUtils.get_json(self.base_url, self.GET_JOB_INFO_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response
 
     def get_job_list(self, api_token, options=None):
+        """
+        :type api_token: basestring
+        :type options: JobListOptions|None
+        :rtype: list
+        """
         query_dict = self.__init_access_req_dict(api_token)
         if options:
             query_dict.update(options.get_dict())
@@ -143,6 +200,12 @@ class Actions(object):
         return response
 
     def add_media_to_job_file(self, api_token, job_id, media_file):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type media_file: file
+        :rtype: basestring
+        """
         self.__assert_argument(media_file, 'Media File')
         query_dict = self.__init_job_req_dict(api_token, job_id)
         file_size = fstat(media_file.fileno()).st_size
@@ -151,12 +214,29 @@ class Actions(object):
         return response['TaskId']
 
     def add_media_to_job_url(self, api_token, job_id, media_url):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type media_url: basestring
+        :rtype: basestring
+        """
         return self.__send_media_url(api_token, job_id, media_url, self.ADD_MEDIA_TO_JOB_PATH)
 
     def add_media_to_job_embedded(self, api_token, job_id, media_url):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type media_url: basestring
+        :rtype: basestring
+        """
         return self.__send_media_url(api_token, job_id, media_url, self.ADD_EMBEDDED_MEDIA_TO_JOB_PATH)
 
     def get_media(self, api_token, job_id):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :rtype: basestring
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         response = WebUtils.get_json(self.base_url, self.GET_MEDIA_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response['MediaUrl']
@@ -170,6 +250,17 @@ class Actions(object):
                               turnaround_hours=None,
                               target_language=None,
                               options=None):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type fidelity: Fidelity|basestring
+        :type priority: Priority|basestring|None
+        :type callback_url: basestring|None
+        :type turnaround_hours: int|None
+        :type target_language: Language|basestring|None
+        :type options: PerformTranscriptionOptions|None
+        :rtype: basestring
+        """
         self.__assert_argument(fidelity, 'Fidelity')
         query_dict = self.__init_job_req_dict(api_token, job_id)
         query_dict['transcription_fidelity'] = fidelity
@@ -188,6 +279,12 @@ class Actions(object):
         return response['TaskId']
 
     def get_transcript(self, api_token, job_id, transcript_options=None):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type transcript_options: TranscriptOptions|None
+        :rtype: basestring
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         if transcript_options:
             query_dict.update(transcript_options.get_dict())
@@ -195,6 +292,13 @@ class Actions(object):
         return WebUtils.http_request(self.base_url, self.GET_TRANSCRIPT_PATH, 'GET', WebUtils.DOWNLOAD_TIMEOUT, query_dict)
 
     def get_caption(self, api_token, job_id, caption_format, caption_options=None):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type caption_format: CaptionFormat|basestring
+        :type caption_options: TranscriptOptions|None
+        :rtype: basestring
+        """
         self.__assert_argument(caption_format, 'Caption Format')
         query_dict = self.__init_job_req_dict(api_token, job_id)
         query_dict['caption_format'] = caption_format
@@ -208,6 +312,12 @@ class Actions(object):
             return response  # Else return raw caption text
 
     def get_element_list(self, api_token, job_id, elementlist_version=None):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :type elementlist_version: datetime|basestring
+        :rtype: dict
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         if elementlist_version:
             query_dict['elementlist_version'] = elementlist_version
@@ -216,8 +326,38 @@ class Actions(object):
         return response
 
     def get_list_of_element_lists(self, api_token, job_id):
+        """
+        :type api_token: basestring
+        :type job_id: basestring
+        :rtype: list
+        """
         query_dict = self.__init_job_req_dict(api_token, job_id)
         response = WebUtils.get_json(self.base_url, self.GET_LIST_OF_ELEMENT_LISTS_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
+        return response
+
+    def aggregate_statistics(self, api_token, metrics=None, group_by=None, start_date=None, end_date=None, sub_account=None):
+        """
+        :type api_token: basestring
+        :type metrics: list|None
+        :type group_by: basestring|None
+        :type start_date: date|None
+        :type end_date: date|None
+        :type sub_account: basestring|None
+        :rtype: dict
+        """
+        query_dict = self.__init_access_req_dict(api_token)
+        if metrics:
+            query_dict['metrics'] = json.dumps(metrics)
+        if group_by:
+            query_dict['group_by'] = group_by
+        if start_date:
+            query_dict['start_date'] = start_date.isoformat()
+        if end_date:
+            query_dict['end_date'] = end_date.isoformat()
+        if sub_account:
+            # account_id parameter named sub_account for clarity
+            query_dict['account_id'] = sub_account
+        response = WebUtils.get_json(self.base_url, self.AGGREGATE_STATISTICS_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
         return response
 
     ##############################

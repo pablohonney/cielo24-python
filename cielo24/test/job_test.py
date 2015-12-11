@@ -1,11 +1,15 @@
 # encoding: utf-8
-from uuid import uuid4
+from __future__ import unicode_literals
+
 from datetime import datetime
-from actions_test import ActionsTest
 from urlparse import urlparse
+from uuid import uuid4
+
 from cielo24.options import BaseOptions, CaptionOptions, JobListOptions, TranscriptOptions, PerformTranscriptionOptions
 from cielo24.enums import CaptionFormat, Language, Fidelity, Priority, SoundTag
+
 import config as config
+from actions_test import ActionsTest
 
 
 class JobTest(ActionsTest):
@@ -14,6 +18,13 @@ class JobTest(ActionsTest):
         super(JobTest, self).setUp()
         # Always start with a fresh job
         self.job_id = self.actions.create_job(self.api_token, 'Python_test')['JobId']
+
+    def tearDown(self):
+        # Delete job
+        try:
+            self.actions.delete_job(self.api_token, self.job_id)
+        except:
+            pass  # Pass silently
 
     def test_options_get_dict(self):
         options = JobListOptions()
@@ -154,3 +165,14 @@ class JobTest(ActionsTest):
         file = open(config.sample_video_file_path, 'rb')
         self.task_id = self.actions.add_media_to_job_file(self.api_token, self.job_id, file)
         self.assertEqual(32, len(self.task_id))
+
+    def test_aggregate_statistics(self):
+        response = self.actions.aggregate_statistics(self.api_token,
+                                                     metrics=['billable_minutes_total', 'billable_minutes_professional'],
+                                                     group_by='month',
+                                                     start_date=datetime(2015, 6, 25),
+                                                     end_date=datetime(2015, 7, 25),
+                                                     sub_account='*')
+        self.assertEqual(len(response['data']), 2)
+        self.assertIn('billable_minutes_total', response['data'][0])
+        self.assertIn('billable_minutes_professional', response['data'][0])

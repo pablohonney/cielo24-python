@@ -1,17 +1,17 @@
 # encoding: utf-8
-from actions_test import ActionsTest
-from cielo24.actions import Actions
-from cielo24.web_utils import WebError
+from __future__ import unicode_literals
+
 from cielo24.enums import ErrorType
+from cielo24.web_utils import WebError
+
 import config as config
+from actions_test import ActionsTest
 
 
 class SequentialTest(ActionsTest):
 
-    # Called before every test method runs. Can be used to set up fixture information.
     def setUp(self):
-        self.actions = Actions(config.server_url)
-        # Do nothing else - we want to be able to control when we login/logout etc.
+        pass  # Do nothing - we want to be able to control when we login/logout etc.
 
     def test_sequence(self):
         # Login, generate API key, logout

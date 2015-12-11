@@ -1,7 +1,9 @@
 # encoding: utf-8
-from re import compile
-from datetime import datetime
+from __future__ import unicode_literals
+
 import json
+from datetime import datetime
+from re import compile
 
 
 class BaseOptions(object):
@@ -62,15 +64,14 @@ class CommonOptions(BaseOptions):
         Parameters that are not supplied (remain None) will not be used when building the query.
         Any parameter can also be supplied as a string, but then the caller is responsible for making sure
         that the string has a valid format (e.g. ISO format for datetime). See cielo24 Docs for details.
-        :param elementlist_version: datetime
-        :param emit_speaker_change_token_as: string
-        :param mask_profanity: boolean
-        :param remove_disfluencies: boolean
-        :param remove_sounds_list: list of SoundTag enums
-        :param remove_sound_references: boolean
-        :param replace_slang: boolean
-        :param sound_boundaries: 2-tuple of characters
-        :return:
+        :type elementlist_version: datetime
+        :type emit_speaker_change_token_as: basestring
+        :type mask_profanity: bool
+        :type remove_disfluencies: bool
+        :type remove_sounds_list: list (of SoundTag enums)
+        :type remove_sound_references: bool
+        :type replace_slang: bool
+        :type sound_boundaries: tuple (of 2 characters)
         """
         self.elementlist_version = elementlist_version
         self.emit_speaker_change_token_as = emit_speaker_change_token_as
@@ -105,14 +106,13 @@ class TranscriptOptions(CommonOptions):
         Parameters that are not supplied (remain None) will not be used when building the query.
         Any parameter can also be supplied as a string, but then the caller is responsible for making sure
         that the string has a valid format (e.g. ISO format for datetime). See cielo24 Docs for details.
-        :param create_paragraphs: boolean
-        :param newlines_after_paragraph: int
-        :param newlines_after_sentence: int
-        :param timecode_every_paragraph: boolean
-        :param timecode_format: string
-        :param timecode_interval: int
-        :param timecode_offset: int
-        :return:
+        :type create_paragraphs: bool
+        :type newlines_after_paragraph: int
+        :type newlines_after_sentence: int
+        :type timecode_every_paragraph: bool
+        :type timecode_format: basestring
+        :type timecode_interval: int
+        :type timecode_offset: int
         """
         super(TranscriptOptions, self).__init__(
             elementlist_version,
@@ -178,37 +178,36 @@ class CaptionOptions(CommonOptions):
         Parameters that are not supplied (remain None) will not be used when building the query.
         Any parameter can also be supplied as a string, but then the caller is responsible for making sure
         that the string has a valid format (e.g. ISO format for datetime). See cielo24 Docs for details.
-        :param build_url: boolean
-        :param caption_words_min: int
-        :param caption_by_sentence: boolean
-        :param characters_per_caption_line: int
-        :param dfxp_header: XML String
-        :param disallow_dangling: boolean
-        :param display_effects_speaker_as: string
-        :param display_speaker_id: SpeakerID enum
-        :param force_case: Case enum
-        :param include_dfxp_metadata: boolean
-        :param layout_target_caption_length_ms: int
-        :param line_break_on_sentence: boolean
-        :param line_ending_format: LineEnding enum
-        :param lines_per_caption: int
-        :param maximum_caption_duration: int
-        :param merge_gap_interval: int
-        :param minimum_caption_length_ms: int
-        :param minimum_gap_between_captions_ms: int
-        :param qt_seamless: boolean
-        :param silence_max_ms: int
-        :param single_speaker_per_caption: boolean
-        :param sound_threshold: int
-        :param sound_tokens_by_caption: boolean
-        :param sound_tokens_by_line: boolean
-        :param sound_tokens_by_caption_list: list of SoundTag enums
-        :param sound_tokens_by_line_list: list of SoundTag enums
-        :param speaker_on_new_line: boolean
-        :param srt_format: string
-        :param strip_square_brackets: boolean
-        :param utf8_mark: boolean
-        :return:
+        :type build_url: bool
+        :type caption_words_min: int
+        :type caption_by_sentence: bool
+        :type characters_per_caption_line: int
+        :type dfxp_header: basestring (XML String)
+        :type disallow_dangling: bool
+        :type display_effects_speaker_as: basestring
+        :type display_speaker_id: SpeakerID
+        :type force_case: Case
+        :type include_dfxp_metadata: bool
+        :type layout_target_caption_length_ms: int
+        :type line_break_on_sentence: bool
+        :type line_ending_format: LineEnding
+        :type lines_per_caption: int
+        :type maximum_caption_duration: int
+        :type merge_gap_interval: int
+        :type minimum_caption_length_ms: int
+        :type minimum_gap_between_captions_ms: int
+        :type qt_seamless: bool
+        :type silence_max_ms: int
+        :type single_speaker_per_caption: bool
+        :type sound_threshold: int
+        :type sound_tokens_by_caption: bool
+        :type sound_tokens_by_line: bool
+        :type sound_tokens_by_caption_list: list (of SoundTag enums)
+        :type sound_tokens_by_line_list: list (of SoundTag enums)
+        :type speaker_on_new_line: bool
+        :type srt_format: basestring
+        :type strip_square_brackets: bool
+        :type utf8_mark: bool
         """
         super(CaptionOptions, self).__init__(
             elementlist_version,
@@ -265,14 +264,13 @@ class PerformTranscriptionOptions(BaseOptions):
         Parameters that are not supplied (remain None) will not be used when building the query.
         Any parameter can also be supplied as a string, but then the caller is responsible for making sure
         that the string has a valid format (e.g. ISO format for datetime). See cielo24 Docs for details.
-        :param customer_approval_steps: list of CustomerApprovalStep enums
-        :param customer_approval_tool: CustomerApprovalTool enum
-        :param custom_metadata: single level JSON dictionary
-        :param generate_media_intelligence_for_iwp: list of IWP enums
-        :param notes: string
-        :param return_iwp: list of IWP enums
-        :param speaker_id: boolean
-        :return:
+        :type customer_approval_steps: list (of CustomerApprovalStep enums)
+        :type customer_approval_tool: CustomerApprovalTool
+        :type custom_metadata: single level JSON dictionary
+        :type generate_media_intelligence_for_iwp: list (of IWP enums)
+        :type notes: basestring
+        :type return_iwp: list (of IWP enums)
+        :type speaker_id: bool
         """
         self.customer_approval_steps = customer_approval_steps
         self.customer_approval_tool = customer_approval_tool
@@ -307,24 +305,23 @@ class JobListOptions(BaseOptions):
         Parameters that are not supplied (remain None) will not be used when building the query.
         Any parameter can also be supplied as a string, but then the caller is responsible for making sure
         that the string has a valid format (e.g. ISO format for datetime). See cielo24 Docs for details.
-        :param creation_date_from: datetime
-        :param creation_date_to: datetime
-        :param start_date_from: datetime
-        :param start_date_to: datetime
-        :param due_date_from: datetime
-        :param due_date_to: datetime
-        :param complete_date_from: datetime
-        :param complete_date_to: datetime
-        :param job_status: JobStatus enum
-        :param fidelity: Fidelity enum
-        :param priority: Priority enum
-        :param turnaround_time_hours_from: int
-        :param turnaround_time_hours_to: int
-        :param job_name: string
-        :param external_id: string
-        :param job_difficulty: JobDifficulty enum
-        :param sub_account: string
-        :return:
+        :type creation_date_from: datetime
+        :type creation_date_to: datetime
+        :type start_date_from: datetime
+        :type start_date_to: datetime
+        :type due_date_from: datetime
+        :type due_date_to: datetime
+        :type complete_date_from: datetime
+        :type complete_date_to: datetime
+        :type job_status: JobStatus
+        :type fidelity: Fidelity
+        :type priority: Priority
+        :type turnaround_time_hours_from: int
+        :type turnaround_time_hours_to: int
+        :type job_name: basestring
+        :type external_id: basestring
+        :type job_difficulty: JobDifficulty
+        :type sub_account: basestring
         """
         self.CreationDateFrom = creation_date_from
         self.CreationDateTo = creation_date_to

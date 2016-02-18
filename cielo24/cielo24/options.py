@@ -291,6 +291,10 @@ class JobListOptions(BaseOptions):
                  due_date_to=None,
                  complete_date_from=None,
                  complete_date_to=None,
+                 return_date_from=None,
+                 return_date_to=None,
+                 authorization_date_from=None,
+                 authorization_date_to=None,
                  job_status=None,
                  fidelity=None,
                  priority=None,
@@ -313,6 +317,10 @@ class JobListOptions(BaseOptions):
         :type due_date_to: datetime
         :type complete_date_from: datetime
         :type complete_date_to: datetime
+        :type return_date_from: datetime
+        :type return_date_to: datetime
+        :type authorization_date_from: datetime
+        :type authorization_date_to: datetime
         :type job_status: JobStatus
         :type fidelity: Fidelity
         :type priority: Priority
@@ -331,6 +339,10 @@ class JobListOptions(BaseOptions):
         self.DueDateTo = due_date_to
         self.CompleteDateFrom = complete_date_from
         self.CompleteDateTo = complete_date_to
+        self.ReturnDateFrom = return_date_from
+        self.ReturnDateTo = return_date_to
+        self.AuthorizationDateFrom = authorization_date_from
+        self.AuthorizationDateTo = authorization_date_to
         self.JobStatus = job_status
         self.Fidelity = fidelity
         self.Priority = priority

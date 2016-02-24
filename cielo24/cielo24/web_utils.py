@@ -21,10 +21,9 @@ class WebUtils(object):
     @staticmethod
     def get_json(base_uri, path, method, timeout, query={}, headers={}, body=None):
         response = WebUtils.http_request(base_uri, path, method, timeout, query, headers, body)
-        ret_data = response.read()
         if six.PY3:
-            ret_data = ret_data.decode('utf-8')
-        return json.loads(ret_data)
+            response = response.decode('utf-8')
+        return json.loads(response)
 
 
     @staticmethod

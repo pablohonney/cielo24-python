@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from httplib import HTTPConnection
 from urllib import urlencode
 from urlparse import urlparse
-from json import JSONDecoder
+import json
 from logging import getLogger
 
 
@@ -15,10 +15,15 @@ class WebUtils(object):
     UPLOAD_TIMEOUT = 60*60*24*7  # seconds (1 week)
     LOGGER = getLogger('web_utils')
 
+
     @staticmethod
     def get_json(base_uri, path, method, timeout, query={}, headers={}, body=None):
         response = WebUtils.http_request(base_uri, path, method, timeout, query, headers, body)
-        return JSONDecoder().decode(response)
+        ret_data = response.read()
+        if isinstance(ret_data, bytes):
+            ret_data = ret_data.decode('utf-8')
+        return json.loads(ret_data)
+
 
     @staticmethod
     def http_request(base_uri, path, method, timeout, query={}, headers={}, body=None):
@@ -36,8 +41,11 @@ class WebUtils(object):
         if response.status == 200 or response.status == 204:  # OK or NO_CONTENT
             return response.read()
         else:
-            json = JSONDecoder().decode(response.read())
-            raise WebError(json['ErrorType'], json['ErrorComment'])
+            error_msg = response.read()
+            if isinstance(error_msg, bytes):
+                error_msg = error_msg.decode('utf-8')
+            loaded_data = json.loads(error_msg)
+            raise WebError(loaded_data['ErrorType'], loaded_data['ErrorComment'])
 
 
 class WebError(StandardError):

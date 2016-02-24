@@ -7,6 +7,8 @@ from urlparse import urlparse
 import json
 from logging import getLogger
 
+import six
+
 
 class WebUtils(object):
 
@@ -20,7 +22,7 @@ class WebUtils(object):
     def get_json(base_uri, path, method, timeout, query={}, headers={}, body=None):
         response = WebUtils.http_request(base_uri, path, method, timeout, query, headers, body)
         ret_data = response.read()
-        if isinstance(ret_data, bytes):
+        if six.PY3:
             ret_data = ret_data.decode('utf-8')
         return json.loads(ret_data)
 
@@ -42,7 +44,7 @@ class WebUtils(object):
             return response.read()
         else:
             error_msg = response.read()
-            if isinstance(error_msg, bytes):
+            if six.PY3:
                 error_msg = error_msg.decode('utf-8')
             loaded_data = json.loads(error_msg)
             raise WebError(loaded_data['ErrorType'], loaded_data['ErrorComment'])

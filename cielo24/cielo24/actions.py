@@ -20,6 +20,7 @@ class Actions(object):
     REMOVE_API_KEY_PATH = '/api/account/remove_api_key'
     CREATE_JOB_PATH = '/api/job/new'
     AUTHORIZE_JOB_PATH = '/api/job/authorize'
+    MODIFY_JOB_PATH = '/api/job/modify'
     DELETE_JOB_PATH = '/api/job/del'
     GET_JOB_INFO_PATH = '/api/job/info'
     GET_JOB_LIST_PATH = '/api/job/list'
@@ -166,6 +167,31 @@ class Actions(object):
         query_dict = self.__init_job_req_dict(api_token, job_id)
         # Nothing returned
         WebUtils.http_request(self.base_url, self.AUTHORIZE_JOB_PATH, 'GET', WebUtils.BASIC_TIMEOUT, query_dict)
+
+    def modify_job(self, api_token, job_id, fidelity=None, turnaround_hours=None, priority=None):
+        """
+        Modify parameters of an already existing job. The job must be in Authorization state.
+        :param api_token: The API token used for this session
+        :type api_token: basestring
+        :param job_id: The ID of the job which is being modified
+        :type job_id: basestring
+        :param fidelity: The desired fidelity of the transcription
+        :type fidelity: Fidelity|basestring|None
+        :param turnaround_hours: The number of hours after which the job is returned
+        :type turnaround_hours: int|None
+        :param priority: The desired priority of the transcription
+        :type priority: Priority|basestring|None
+        """
+        query_dict = self.__init_job_req_dict(api_token, job_id)
+
+        if fidelity:
+            query_dict['transcription_fidelity'] = fidelity
+        if priority:
+            query_dict['priority'] = priority
+        if turnaround_hours:
+            query_dict['turnaround_hours'] = turnaround_hours
+
+        WebUtils.http_request(self.base_url, self.MODIFY_JOB_PATH, 'POST', WebUtils.BASIC_TIMEOUT, query_dict)
 
     def delete_job(self, api_token, job_id):
         """

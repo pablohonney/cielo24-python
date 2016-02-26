@@ -84,6 +84,12 @@ class JobTest(ActionsTest):
     def test_authorize_job(self):
         self.actions.authorize_job(self.api_token, self.job_id)
 
+    def test_modify_job(self):
+        self.actions.modify_job(self.api_token, self.job_id,
+                                fidelity=Fidelity.PROFESSIONAL,
+                                turnaround_hours=36,
+                                priority=Priority.ECONOMY)
+
     def test_delete_job(self):
         self.task_id = self.actions.delete_job(self.api_token, self.job_id)
         self.assertEqual(32, len(self.task_id))

@@ -154,6 +154,35 @@ def authorize(job_id,
 
 
 @app.option('-j', dest='job_id', required=True, help="Job Id")
+@app.option('-f', dest='fidelity', required=False, help="Fidelity: " + ', '.join(Fidelity.str_list()), default=Fidelity.PREMIUM)
+@app.option('-P', dest='priority', required=False, help="Priority: " + ', '.join(Priority.str_list()), default=Priority.STANDARD)
+@app.option('-T', dest='turnaround_hours', required=False, help="Turnaround hours")
+# Always required (hidden)
+@app.option('-u', dest='username', required=True, help="cielo24 username")
+@app.option('-p', dest='password', required=False, help="cielo24 password", default=None)
+@app.option('-k', dest='api_securekey', required=False,help="The API Secure Key",  default=None)
+@app.option('-N', dest='api_token', required=False, help="The API token of the current session", default=None)
+@app.option('-s', dest='server_url', required=False, help="cielo24 server URL [https://api.cielo24.com]", default="http://api.cielo24.com")
+@app.option('-v', dest='verbose_mode', required=False, help="Verbose mode", default=False, action='store_true')
+def modify_job(job_id,
+               fidelity,
+               priority,
+               turnaround_hours,
+               username,
+               password,
+               api_securekey,
+               api_token,
+               server_url,
+               verbose_mode):
+    print "Modifying job parameters..."
+    __set_verbose(verbose_mode)
+    actions = __initialize_actions(server_url)
+    token = __get_token(actions, username, password, api_securekey, api_token)
+    actions.modify_job(token, job_id, fidelity, priority, turnaround_hours)
+    print "Job modified successfully"
+
+
+@app.option('-j', dest='job_id', required=True, help="Job Id")
 @app.option('-m', dest='media_url', required=False, help="Media URL")
 @app.option('-M', dest='media_file', required=False, help="Local media file")
 # Always required (hidden)

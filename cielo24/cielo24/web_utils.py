@@ -1,7 +1,7 @@
 # encoding: utf-8
 from __future__ import unicode_literals
 
-from httplib import HTTPConnection
+from httplib import HTTPSConnection
 from urllib import urlencode
 from urlparse import urlparse
 import json
@@ -32,7 +32,7 @@ class WebUtils(object):
             query = {}
         if headers is None:
             headers = {}
-        http_connection = HTTPConnection(urlparse(base_uri).netloc, timeout=timeout)
+        http_connection = HTTPSConnection(urlparse(base_uri).netloc, timeout=timeout)
         query_string = ('?' + urlencode(query)) if len(query) else ''
         # Will raise an error on timeout
         http_connection.request(method, path + query_string, body=body, headers=headers)
